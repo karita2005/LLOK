@@ -1,0 +1,49 @@
+{% extends "inscription/base.html" %}
+
+{% block titre %}Accueil — Gestion Université{% endblock %}
+
+{% block contenu %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-3">Bienvenue sur la plateforme de gestion universitaire</h1>
+    <p class="lead text-muted mb-5">
+        Gérez facilement les étudiants, les cours et les inscriptions
+        grâce à cette application CRUD Django avec relation ManyToMany.
+    </p>
+
+    <div class="row justify-content-center g-4">
+        <!-- Carte Étudiants -->
+        <div class="col-md-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Étudiants</h3>
+                    <p class="card-text text-muted">
+                        Consulter, ajouter, modifier ou supprimer des étudiants.
+                        Gérer leurs inscriptions aux cours.
+                    </p>
+                    <a href="{% url 'etudiant_liste' %}" class="btn btn-primary">
+                        <i class="bi bi-list-ul me-1"></i>Voir les étudiants
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte Cours -->
+        <div class="col-md-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-book-fill text-success" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Cours</h3>
+                    <p class="card-text text-muted">
+                        Consulter, ajouter, modifier ou supprimer des cours.
+                        Voir les étudiants inscrits à chaque cours.
+                    </p>
+                    <a href="{% url 'cours_liste' %}" class="btn btn-success">
+                        <i class="bi bi-list-ul me-1"></i>Voir les cours
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
