@@ -1,0 +1,61 @@
+{% extends "inscription/base.html" %}
+
+{% block titre %}Détail — {{ etudiant }}{% endblock %}
+
+{% block contenu %}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">
+            <i class="bi bi-person-circle me-2"></i>{{ etudiant.prenom }} {{ etudiant.nom }}
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <p><strong>Nom :</strong> {{ etudiant.nom }}</p>
+                <p><strong>Prénom :</strong> {{ etudiant.prenom }}</p>
+                <p><strong>E-mail :</strong>
+                    <a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a>
+                </p>
+                <p><strong>Date d'inscription :</strong> {{ etudiant.date_inscription|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+
+        <h4 class="mt-4 mb-3">
+            <i class="bi bi-book me-2"></i>Cours inscrits
+            <span class="badge bg-info">{{ etudiant.cours.count }}</span>
+        </h4>
+
+        {% if etudiant.cours.all %}
+        <ul class="list-group">
+            {% for cours in etudiant.cours.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ cours.nom }}</strong>
+                    <br><small class="text-muted">Professeur : {{ cours.professeur }}</small>
+                </div>
+                <a href="{% url 'cours_detail' cours.pk %}" class="btn btn-sm btn-outline-info">
+                    <i class="bi bi-eye me-1"></i>Voir
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>Cet étudiant n'est inscrit à aucun cours.
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'etudiant_modifier' etudiant.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i>Modifier
+        </a>
+        <a href="{% url 'etudiant_supprimer' etudiant.pk %}" class="btn btn-danger">
+            <i class="bi bi-trash me-1"></i>Supprimer
+        </a>
+        <a href="{% url 'etudiant_liste' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour à la liste
+        </a>
+    </div>
+</div>
+{% endblock %}

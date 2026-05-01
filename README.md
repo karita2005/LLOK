@@ -1,13 +1,19 @@
-# 🎓 API CRUD — Gestion Université (Étudiants & Cours)
+# Gestion Université — Étudiants & Cours
 
-Application Flask complète implémentant une relation **many-to-many** entre les modèles **Étudiant** et **Cours**, avec une API REST entièrement en français.
+Ce dépôt contient deux applications de gestion universitaire implémentant une relation **many-to-many** entre les modèles **Étudiant** et **Cours**, entièrement en français.
 
-## Prérequis
+---
+
+## Application Django CRUD (avec interface Bootstrap 5)
+
+Application web complète avec interface graphique Bootstrap 5, offrant toutes les opérations CRUD via des formulaires et des vues.
+
+### Prérequis
 
 - Python 3.10 ou supérieur
 - pip (gestionnaire de paquets Python)
 
-## Installation
+### Installation et lancement
 
 ```bash
 # 1. Cloner le dépôt
@@ -20,21 +26,94 @@ source venv/bin/activate  # Sous Windows : venv\Scripts\activate
 
 # 3. Installer les dépendances
 pip install -r requirements.txt
+
+# 4. Créer les migrations et appliquer
+cd gestion_universite
+python manage.py makemigrations
+python manage.py migrate
+
+# 5. Lancer le serveur de développement
+python manage.py runserver
 ```
 
-## Lancement de l'application
+L'application Django démarre sur `http://localhost:8000`.
 
-```bash
-python app.py
+### Structure du projet Django
+
+```
+gestion_universite/
+├── manage.py                          # Utilitaire en ligne de commande Django
+├── gestion_universite/
+│   ├── __init__.py
+│   ├── settings.py                    # Configuration du projet (SQLite, apps, templates)
+│   ├── urls.py                        # URLs principales
+│   └── wsgi.py                        # Point d'entrée WSGI
+└── inscription/
+    ├── __init__.py
+    ├── admin.py                       # Configuration de l'admin Django
+    ├── apps.py                        # Configuration de l'application
+    ├── forms.py                       # Formulaires ModelForm (CheckboxSelectMultiple)
+    ├── models.py                      # Modèles Étudiant et Cours (ManyToManyField)
+    ├── urls.py                        # URLs de l'application
+    ├── views.py                       # Vues CRUD (class-based views)
+    ├── migrations/
+    │   └── 0001_initial.py            # Migration initiale
+    └── templates/inscription/
+        ├── base.html                  # Template de base (navbar, Bootstrap 5)
+        ├── accueil.html               # Page d'accueil
+        ├── etudiant_liste.html        # Liste des étudiants
+        ├── etudiant_detail.html       # Détail d'un étudiant
+        ├── etudiant_form.html         # Formulaire création/modification étudiant
+        ├── etudiant_confirmer_suppression.html  # Confirmation suppression
+        ├── cours_liste.html           # Liste des cours
+        ├── cours_detail.html          # Détail d'un cours
+        ├── cours_form.html            # Formulaire création/modification cours
+        └── cours_confirmer_suppression.html     # Confirmation suppression
 ```
 
-L'application démarre sur `http://localhost:5000`. La base de données SQLite (`universite.db`) est créée automatiquement et peuplée avec des données d'exemple au premier lancement.
+### URLs disponibles (Django)
+
+| URL                              | Description                              |
+|----------------------------------|------------------------------------------|
+| `/`                              | Page d'accueil                           |
+| `/etudiants/`                    | Liste des étudiants                      |
+| `/etudiants/creer/`              | Créer un étudiant                        |
+| `/etudiants/<id>/`               | Détail d'un étudiant                     |
+| `/etudiants/<id>/modifier/`      | Modifier un étudiant                     |
+| `/etudiants/<id>/supprimer/`     | Supprimer un étudiant                    |
+| `/cours/`                        | Liste des cours                          |
+| `/cours/creer/`                  | Créer un cours                           |
+| `/cours/<id>/`                   | Détail d'un cours                        |
+| `/cours/<id>/modifier/`          | Modifier un cours                        |
+| `/cours/<id>/supprimer/`         | Supprimer un cours                       |
+| `/admin/`                        | Interface d'administration Django        |
+
+### Fonctionnalités
+
+- **Modèles** : `Etudiant` et `Cours` avec `ManyToManyField`
+- **Vues** : Class-based views (ListView, DetailView, CreateView, UpdateView, DeleteView)
+- **Formulaires** : `ModelForm` avec `CheckboxSelectMultiple` pour le champ many-to-many
+- **Templates** : Bootstrap 5 avec icônes Bootstrap Icons
+- **Administration** : Interface admin Django configurée
 
 ---
 
-## Points de terminaison de l'API
+## API REST Flask
 
-### Étudiants
+Application Flask avec API REST pour les mêmes modèles.
+
+### Lancement de l'API Flask
+
+```bash
+cd LLOK
+python app.py
+```
+
+L'application démarre sur `http://localhost:5000`.
+
+### Points de terminaison de l'API
+
+#### Étudiants
 
 | Méthode  | URL                              | Description                          |
 |----------|----------------------------------|--------------------------------------|
@@ -44,15 +123,7 @@ L'application démarre sur `http://localhost:5000`. La base de données SQLite (
 | `PUT`    | `/api/etudiants/<id>`            | Modifier un étudiant existant        |
 | `DELETE` | `/api/etudiants/<id>`            | Supprimer un étudiant                |
 
-#### Exemple — Créer un étudiant
-
-```bash
-curl -X POST http://localhost:5000/api/etudiants \
-  -H "Content-Type: application/json" \
-  -d '{"nom": "Leroy", "prenom": "Antoine", "email": "antoine.leroy@universite.fr"}'
-```
-
-### Cours
+#### Cours
 
 | Méthode  | URL                              | Description                          |
 |----------|----------------------------------|--------------------------------------|
@@ -62,15 +133,7 @@ curl -X POST http://localhost:5000/api/etudiants \
 | `PUT`    | `/api/cours/<id>`                | Modifier un cours existant           |
 | `DELETE` | `/api/cours/<id>`                | Supprimer un cours                   |
 
-#### Exemple — Créer un cours
-
-```bash
-curl -X POST http://localhost:5000/api/cours \
-  -H "Content-Type: application/json" \
-  -d '{"nom": "Chimie Organique", "description": "Les bases de la chimie organique.", "professeur": "Pr. Lambert"}'
-```
-
-### Inscriptions (relation many-to-many)
+#### Inscriptions (relation many-to-many)
 
 | Méthode  | URL                                                    | Description                                    |
 |----------|--------------------------------------------------------|------------------------------------------------|
@@ -79,35 +142,12 @@ curl -X POST http://localhost:5000/api/cours \
 | `GET`    | `/api/etudiants/<id>/cours`                            | Lister les cours d'un étudiant                 |
 | `GET`    | `/api/cours/<id>/etudiants`                            | Lister les étudiants inscrits à un cours       |
 
-#### Exemple — Inscrire un étudiant à un cours
-
-```bash
-curl -X POST http://localhost:5000/api/etudiants/1/inscrire/3
-```
-
 ---
-
-## Structure du projet
-
-```
-LLOK/
-├── app.py              # Application principale (modèles, routes, peuplement)
-├── requirements.txt    # Dépendances Python
-├── README.md           # Ce fichier
-└── instance/
-    └── universite.db   # Base de données SQLite (créée automatiquement)
-```
-
-## Données d'exemple
-
-Au premier lancement, la base est peuplée avec :
-
-- **5 étudiants** : Marie Dupont, Jean Martin, Sophie Bernard, Lucas Petit, Camille Moreau
-- **4 cours** : Mathématiques Avancées, Littérature Française, Informatique Fondamentale, Philosophie Moderne
-- **10 inscriptions** reliant les étudiants aux cours
 
 ## Technologies utilisées
 
-- **Flask** — Micro-framework web Python
-- **Flask-SQLAlchemy** — ORM pour la gestion de la base de données
+- **Django** — Framework web Python (application CRUD avec Bootstrap 5)
+- **Flask** — Micro-framework web Python (API REST)
+- **Flask-SQLAlchemy** — ORM pour Flask
 - **SQLite** — Base de données embarquée
+- **Bootstrap 5** — Framework CSS pour l'interface utilisateur
